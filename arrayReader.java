@@ -1,5 +1,6 @@
 import java.io.*;
 
+
 public class arrayReader{
 	 public static boolean isSafe(int[][] board,
              int row, int col,
