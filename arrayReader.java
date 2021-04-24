@@ -62,6 +62,8 @@ public class arrayReader
 			int row = -1;
 			int col = -1;
 			boolean isEmpty = true;
+			
+			//traverse the array/puzzle for 0
 			for (int i = 0; i < n; i++)
 			{
 				for (int j = 0; j < n; j++)
@@ -89,20 +91,23 @@ public class arrayReader
 			}
 			
 			// Else for each-row backtrack
-			for (int num = 1; num <= n; num++)
+			else
 			{
-				if (isSafe(board, row, col, num))
+				for (int num = 1; num <= n; num++)
 				{
-					board[row][col] = num;
-					if (solveSudoku(board, n))
+					if (isSafe(board, row, col, num))
 					{
-						// print(board, n);
-						return true;
-					}
-					else
-					{
-						// replace it
-						board[row][col] = 0;
+						board[row][col] = num;
+						if (solveSudoku(board, n))
+						{
+							// print(board, n);
+							return true;
+						}
+						else
+						{
+							// replace it
+							board[row][col] = 0;
+						}
 					}
 				}
 			}
