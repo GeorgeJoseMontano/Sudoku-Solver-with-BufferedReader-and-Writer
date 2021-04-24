@@ -3,36 +3,44 @@ import java.io.*;
 //test if change
 public class arrayReader
 {	 
-	 public static boolean isSafe(int[][] board,
-             int row, int col,
-             int num)
+	static boolean isSafe(int[][] board,int row, int col, int num)
+	{
+		if(rowSafe(board, row, col, num) && colSafe(board, row, col, num) && squareSafe(board, row, col, num))
 		{
-		// Row has the unique (row-clash)
+			return true;
+		}
+		return false;
+	}
+	
+	// method to check if number to be placed already exist in row
+	static boolean rowSafe(int[][] board,int row, int col, int num)
+	{
 		for (int d = 0; d < board.length; d++)
 		{			
-			// Check if the number we are trying to
-			// place is already present in
-			// that row, return false;
-			if (board[row][d] == num) {
-			return false;
+			if (board[row][d] == num) 
+			{
+				return false;
 			}
 		}
-		
-		// Column has the unique numbers (column-clash)
+		return true;
+	}	
+	
+	// method to check if number to be placed already exist in column
+	static boolean colSafe(int[][] board,int row, int col, int num)
+	{
 		for (int r = 0; r < board.length; r++)
-		{		
-		// Check if the number
-		// we are trying to
-		// place is already present in
-		// that column, return false;
+		{	
 			if (board[r][col] == num)
 			{
 				return false;
 			}
 		}
-		
-		// Corresponding square has
-		// unique number (box-clash)
+		return true;
+	}
+	// method to check if number to be placed already exist in square of 3x3 if 9x9 sudoku or 3x2 if 6x6 sudoku
+	static boolean squareSafe(int[][] board,int row, int col, int num)
+	{
+		//row and column must always be equal to 
 		row = (row/(board.length/3)*(board.length/3));
 		col = (col/3)*3;
 		for(int r=0; r<(board.length/3); r++)
@@ -40,13 +48,14 @@ public class arrayReader
 			for(int c=0; c<3; c++)
 			{
 				if(board[row+r][col+c] == num)
-					 return false ;
+				{
+					return false ;
+				}
 			}
 		}
-		
-		// if there is no clash, it's safe
 		return true;
-		}
+	}
+		// if there is no clash, it's safe
 		
 		public static boolean solveSudoku(int[][] board, int n)
 		{
