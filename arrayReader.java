@@ -156,7 +156,8 @@ public class arrayReader
 		}
 		return false;
 	}
-		
+	
+	//method to summarize check of row, col and square
 	static boolean isSafe(int[][] board,int row, int col, int num)
 	{
 		if(rowSafe(board, row, col, num) && colSafe(board, row, col, num) && squareSafe(board, row, col, num))
@@ -191,23 +192,26 @@ public class arrayReader
 		}
 		return true;
 	}
+	
 	// method to check if number to be placed already exist in square of 3x3 if 9x9 sudoku or 3x2 if 6x6 sudoku
 	static boolean squareSafe(int[][] board,int row, int col, int num)
 	{
-		//column are grouped by 3
-		col = (col/3)*3;
+		//make sure col and row do not exceed respective box
+		//and go out of bounds
+		//column are grouped by 3 and does not exceed 3
+		int boxCol = col - col % 3;
+		//row same as above but varies from row-row%2 for 6x6 or row-row%3 for 9x9
+		int boxRow = row - row % (board.length/3);
 		
-		//row same as above but varies from (row/2)* 2 for 6x6 or (row/3)*3 for 9x9
-		row = (row/(board.length/3)*(board.length/3));
-		
-		//for loop to adjust for 9x9 and 6x6
+		//for loop to traverse box
 		//rows are variable to 3x3 and 3x2
-		for(int r=0; r<(board.length/3); r++)
+		for(int r = 0; r < (board.length / 3); r++)
 		{
 			//but columns are constant 3
-			for(int c=0; c<3; c++)
+			for(int c = 0; c < 3; c++)
 			{
-				if(board[row+r][col+c] == num)
+				//if number exist then return false
+				if(board[boxRow + r][boxCol + c] == num)
 				{
 					return false ;
 				}
@@ -215,26 +219,19 @@ public class arrayReader
 		}
 		return true;
 	}
-		// if there is no clash, it's safe
 		
-		
-		public static void print(
-		int[][] board, int N)
+	//method to print the array of solution
+	public static void print(int[][] board, int N)
+	{
+		// We got the answer, just print it
+		for (int r = 0; r < N; r++)
 		{
-			// We got the answer, just print it
-			for (int r = 0; r < N; r++)
+			for (int d = 0; d < N; d++)
 			{
-				for (int d = 0; d < N; d++)
-				{
-					System.out.print(board[r][d]);
-					System.out.print(" ");
-				}
-				System.out.print("\n");
-				
-				if ((r + 1) % (int)Math.sqrt(N) == 0)
-				{
-					System.out.print("");
-				}
+				System.out.print(board[r][d]);
+				System.out.print(" ");
 			}
+			System.out.println();
 		}
+	}
 }
