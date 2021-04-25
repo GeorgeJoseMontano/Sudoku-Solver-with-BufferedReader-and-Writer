@@ -1,7 +1,7 @@
 import java.io.*;
 
 //test if change
-public class arrayReader
+public class sudokuSolver
 {	 
 	static OurListQueue queue = new OurListQueue();
 	
@@ -104,51 +104,50 @@ public class arrayReader
 	{
 		int row = -1;
 		int col = -1;
-		boolean isEmpty = true;
+		boolean isFilled = true;
 		
-		//traverse the array/puzzle for 0
-		for (int i = 0; i < n; i++)
+		//traverse the array/puzzle for 0 or empty slots
+		for (int i = 0; i < n && isFilled; i++)
 		{
-			for (int j = 0; j < n; j++)
+			for (int j = 0; j < n && isFilled; j++)
 			{
+				//if there is empty slot it will flag false and 
+				//end loop at current position
 				if (board[i][j] == 0)
 				{
 					row = i;
-					col = j;
-					// We still have some remaining
-					// missing values in Sudoku
-					isEmpty = false;
-					break;
+					col = j;	
+					isFilled = false;
 				}
-			}
-			if (!isEmpty) 
-			{
-				break;
 			}
 		}
 		
-		// No empty space left
-		if (isEmpty)
+		// if no 0 or empty slots then end method and return true
+		if (isFilled)
 		{
 			return true;
 		}
 			
-		// Else for each-row backtrack
+		// else for each-row backtrack
 		else
 		{
 			for (int num = 1; num <= n; num++)
 			{
 				if (isSafe(board, row, col, num))
 				{
+					//fill slot with num
 					board[row][col] = num;
+					//if all the subsequent slots have been successfully
+					//filled with a num with no clashes found then it
+					//will successfully return true
 					if (solveSudoku(board, n))
 					{
-						// print(board, n);
 						return true;
 					}
+					//otherwise slot will be returned to empty and will backtrack
+					//and will be ready to receive a new num
 					else
 					{
-						// replace it
 						board[row][col] = 0;
 					}
 				}
@@ -192,24 +191,26 @@ public class arrayReader
 		}
 		return true;
 	}
+	
 	// method to check if number to be placed already exist in square of 3x3 if 9x9 sudoku or 3x2 if 6x6 sudoku
 	static boolean squareSafe(int[][] board,int row, int col, int num)
 	{
-		//make sure col and row do not exceed board length
+		//make sure col and row do not exceed respective box
 		//and go out of bounds
-		//column are grouped by 3
-		col = (col/3)*3;
-		//row same as above but varies from (row/2)* 2 for 6x6 or (row/3)*3 for 9x9
-		row = (row/(board.length/3)*(board.length/3));
+		//column are grouped by 3 and does not exceed 3
+		int boxCol = col - col % 3;
+		//row same as above but varies from row-row%2 for 6x6 or row-row%3 for 9x9
+		int boxRow = row - row % (board.length/3);
 		
-		//for loop to adjust for 9x9 and 6x6
+		//for loop to traverse box
 		//rows are variable to 3x3 and 3x2
 		for(int r = 0; r < (board.length / 3); r++)
 		{
 			//but columns are constant 3
 			for(int c = 0; c < 3; c++)
 			{
-				if(board[row + r][col + c] == num)
+				//if number exist then return false
+				if(board[boxRow + r][boxCol + c] == num)
 				{
 					return false ;
 				}
@@ -230,11 +231,6 @@ public class arrayReader
 				System.out.print(" ");
 			}
 			System.out.println();
-			
-			if ((r + 1) % (int)Math.sqrt(N) == 0)
-			{
-				System.out.print("");
-			}
 		}
 	}
 }
